@@ -1,0 +1,62 @@
+[
+  {
+    "id": 1,
+    "nombre": "Juan Pablo",
+    "acudiente": "Mamá",
+    "telefono": "573225940033",
+    "barrio": "El Turbai",
+    "ruta": "Bachillerato 1",
+    "orden": 1,
+    "lat": 4.5721,
+    "lng": -75.7474,
+    "minutosEstimados": 3
+  },
+  {
+    "id": 2,
+    "nombre": "Nicolás Bedoya",
+    "acudiente": "Mamá",
+    "telefono": "573128840559",
+    "barrio": "El Turbai",
+    "ruta": "Bachillerato 1",
+    "orden": 2,
+    "lat": 4.5728,
+    "lng": -75.7467,
+    "minutosEstimados": 4
+  },
+  {
+    "id": 3,
+    "nombre": "Dilan Gañán",
+    "acudiente": "Abuela Teresa",
+    "telefono": "573206342481",
+    "barrio": "El Turbai",
+    "ruta": "Bachillerato 1",
+    "orden": 3,
+    "lat": 4.5735,
+    "lng": -75.746,
+    "minutosEstimados": 5
+  },
+  {
+    "id": 4,
+    "nombre": "Sara Gómez",
+    "acudiente": "Papá Carlos",
+    "telefono": "573102224455",
+    "barrio": "Villa Carolina",
+    "ruta": "Primaria",
+    "orden": 1,
+    "lat": 4.5654,
+    "lng": -75.7538,
+    "minutosEstimados": 4
+  },
+  {
+    "id": 5,
+    "nombre": "Tomás León",
+    "acudiente": "Mamá Diana",
+    "telefono": "573112223344",
+    "barrio": "Ciudad Alegría",
+    "ruta": "Transicion",
+    "orden": 1,
+    "lat": 4.5609,
+    "lng": -75.7568,
+    "minutosEstimados": 4
+  }
+]

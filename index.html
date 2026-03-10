@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ruta Escolar Montenegro</title>
+  <link rel="preconnect" href="https://unpkg.com" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Panel de conductor</p>
+        <h1>Ruta Escolar Montenegro</h1>
+      </div>
+      <button id="toggleThemeBtn" class="ghost-btn">🌙</button>
+    </header>
+
+    <main class="content-grid">
+      <section class="hero-card">
+        <div>
+          <span class="badge">GPS + WhatsApp Business</span>
+          <h2>Operación rápida</h2>
+          <p class="muted">Interfaz sencilla para celular, con mensajes masivos, orden de recogida y vista previa de IA.</p>
+        </div>
+        <div class="hero-actions">
+          <button class="primary-btn" id="startRouteBtn">Iniciar ruta</button>
+          <button class="secondary-btn" id="stopRouteBtn">Detener GPS</button>
+        </div>
+      </section>
+
+      <section class="stats-grid">
+        <article class="stat-card">
+          <span>Total activos</span>
+          <strong id="totalActivos">0</strong>
+        </article>
+        <article class="stat-card">
+          <span>Pendientes</span>
+          <strong id="totalPendientes">0</strong>
+        </article>
+        <article class="stat-card">
+          <span>Completados</span>
+          <strong id="totalCompletados">0</strong>
+        </article>
+        <article class="stat-card">
+          <span>Cola WhatsApp</span>
+          <strong id="colaMensajes">0</strong>
+        </article>
+      </section>
+
+      <section class="panel-card controls-card">
+        <div class="section-head">
+          <h3>Controles de mensajes</h3>
+          <span id="gpsStatus" class="status-pill">GPS inactivo</span>
+        </div>
+
+        <div class="route-picker">
+          <label for="routeSelect">Ruta</label>
+          <select id="routeSelect">
+            <option value="Bachillerato 1">Bachillerato 1</option>
+            <option value="Bachillerato 2">Bachillerato 2</option>
+            <option value="Primaria">Primaria</option>
+            <option value="Transicion">Transición</option>
+            <option value="Especial">Especial</option>
+          </select>
+        </div>
+
+        <div class="btn-grid">
+          <button class="action-btn" id="sendReadyBtn">Ruta alistándose</button>
+          <button class="action-btn" id="sendSchoolArrivalBtn">Llegada al colegio</button>
+          <button class="action-btn" id="sendNeighborhoodBtn">Avisar barrio actual</button>
+          <button class="action-btn" id="sendCurrentStudentBtn">Avisar estudiante actual</button>
+        </div>
+
+        <div class="route-order-box">
+          <div class="section-head small-gap">
+            <h4>Orden de recogida</h4>
+            <button class="ghost-btn" id="refreshOrderBtn">Actualizar</button>
+          </div>
+          <div id="pickupOrderList" class="student-list compact-list"></div>
+        </div>
+      </section>
+
+      <section class="panel-card whatsapp-card">
+        <div class="section-head">
+          <h3>WhatsApp</h3>
+          <span id="backendStatus" class="status-pill warn">Sin probar</span>
+        </div>
+
+        <div class="field-grid">
+          <label>
+            Modo de envío
+            <select id="channelMode">
+              <option value="business">WhatsApp Business</option>
+              <option value="app">Abrir WhatsApp</option>
+              <option value="demo">Demo local</option>
+            </select>
+          </label>
+          <label>
+            URL backend
+            <input id="backendUrl" type="text" placeholder="https://tu-worker.workers.dev" />
+          </label>
+          <label>
+            API key
+            <input id="apiKey" type="password" placeholder="Llave del backend" />
+          </label>
+          <label>
+            Tono IA
+            <select id="toneSelect">
+              <option value="cercano">Cercano</option>
+              <option value="formal">Formal</option>
+              <option value="breve">Breve</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="btn-grid two-col">
+          <button class="secondary-btn" id="saveConfigBtn">Guardar backend</button>
+          <button class="secondary-btn" id="testBackendBtn">Probar conexión</button>
+        </div>
+
+        <label class="preview-block">
+          Vista previa del mensaje IA
+          <textarea id="messagePreview" rows="11"></textarea>
+        </label>
+      </section>
+
+      <section class="panel-card map-card">
+        <div class="section-head">
+          <h3>Ubicación en tiempo real</h3>
+          <span id="currentNeighborhood" class="status-pill">Sin barrio</span>
+        </div>
+        <div id="map"></div>
+      </section>
+
+      <section class="panel-card students-card">
+        <div class="section-head">
+          <h3>Estudiantes</h3>
+          <button class="ghost-btn" id="reloadDataBtn">Recargar</button>
+        </div>
+
+        <form id="studentForm" class="student-form">
+          <input type="hidden" id="studentId" />
+          <input id="studentName" type="text" placeholder="Nombre del estudiante" required />
+          <input id="guardianName" type="text" placeholder="Acudiente" required />
+          <input id="phoneNumber" type="text" placeholder="Teléfono 57..." required />
+          <select id="studentNeighborhood"></select>
+          <select id="studentRoute">
+            <option value="Bachillerato 1">Bachillerato 1</option>
+            <option value="Bachillerato 2">Bachillerato 2</option>
+            <option value="Primaria">Primaria</option>
+            <option value="Transicion">Transición</option>
+            <option value="Especial">Especial</option>
+          </select>
+          <input id="studentOrder" type="number" min="1" placeholder="Orden" required />
+          <input id="studentLat" type="number" step="any" placeholder="Latitud" />
+          <input id="studentLng" type="number" step="any" placeholder="Longitud" />
+          <button class="primary-btn" type="submit">Guardar estudiante</button>
+        </form>
+
+        <div id="studentsList" class="student-list"></div>
+      </section>
+
+      <section class="panel-card ai-card">
+        <div class="section-head">
+          <h3>IA de mensajes</h3>
+          <span class="status-pill ok">Activa</span>
+        </div>
+        <div class="ai-actions">
+          <button class="secondary-btn" id="improveReadyBtn">Mejorar alistamiento</button>
+          <button class="secondary-btn" id="improveArrivalBtn">Mejorar llegada</button>
+          <button class="secondary-btn" id="improveCurrentBtn">Mejorar estudiante actual</button>
+        </div>
+        <div id="aiNotes" class="note-box">La IA local organiza mensajes personalizados, masivos y por barrio.</div>
+      </section>
+
+      <section class="panel-card log-card">
+        <div class="section-head">
+          <h3>Bitácora</h3>
+          <button class="ghost-btn" id="clearLogBtn">Limpiar</button>
+        </div>
+        <div id="logList" class="log-list"></div>
+      </section>
+    </main>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="ia.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
